@@ -43,6 +43,21 @@ class Slack
       link_names: options.link_names or 0
 
     payload[emoji.key] = emoji.val
+    // "https://api.slack.com/reference/messaging/payload" for rationale of adding payload.text to payload.blocks
+    if (payload.blocks) {
+      payload.blocks = Object.assign(
+        [
+          {
+            type: "section",
+              text: {
+                type: "mrkdwn",
+                text: payload.text,
+              },
+          },
+        ...payload.blocks
+        ]
+      )
+    }
 
     request
       method: "POST"
